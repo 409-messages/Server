@@ -20,10 +20,22 @@ const Users = (sequelize, DataTypes) => {
       defaultValue: 'user',
       allowNull: false,
     },
+    token: {
+      type:DataTypes.VIRTUAL,
+      get() {
+        return jwt.sign({
+          username: this.username
+        }, SECRET)},
+      set(tokenObj){
+        let token = jwt.sign(tokenObj, SECRET);
+        return token;
+      },
+    },
     capabilities: {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
+          guest: ['read'],
           user: ['read', 'create', 'update'],
           admin: ['read', 'create', 'update', 'delete'],
         }
@@ -34,20 +46,31 @@ const Users = (sequelize, DataTypes) => {
   });
 
   usersTable.beforeCreate(async (user) => {
-    let encryptPass = await bcrypt.hash(user.password, 10);
-    user.password = encryptPass;
+    let encryptPassword = await bcrypt.hash(user.password, 10);
+    user.password = encryptPassword;
   });
 
-  usersTable.authBasic = async function(username, password) {
-    let user = await this.findOne({ where: { username}});
-
-    let isValidPassword = await bcrypt.compare(password, user.password);
+  usersTable.authBasic = async function (username, password) {
+    let parsedUser = await this.findOne({ where: { username}});
+    let isValidPassword = await bcrypt.compare(password, parsedUser.password);
     if(isValidPassword) {
-      return user;
+      return parsedUser;
     } else {
       throw new Error('Not Authenticated');
     }
   }
+  usersTable.authenticateToken = async function (token) {
+    try{
+      const parsedToken = jwt.verify(token, SECRET);
+      const user = await this.findOne({where: {username: parsedToken.username}});
+      if(user){
+        return user;
+      }
+      throw new Error('User Not Found');
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
   return usersTable;
 }
 

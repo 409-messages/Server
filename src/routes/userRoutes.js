@@ -30,7 +30,12 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 
 authRouter.get('/users', bearerAuth, async (req, res, next) => {
   const userQuery = await Users.findAll({});
-  const list = userRecords.map()
+  const list = userQuery.map()
+  res.status(200).send(list);
+})
+
+authRouter.get('/secret', bearerAuth, async (req, res, next) => {
+  res.status(200).send('You are now through the Looking Glass');
 })
 
 module.exports = authRouter;
