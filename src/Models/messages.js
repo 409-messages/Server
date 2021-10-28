@@ -1,6 +1,6 @@
 'use strict';
 
-const Messages = (sequelize, DataTypes) => {
+const Messages = (sequelize, DataTypes) =>
 	sequelize.define('Messages', {
 		sender: {
 			type: DataTypes.STRING,
@@ -15,6 +15,5 @@ const Messages = (sequelize, DataTypes) => {
 			allowNull: true,
 		},
 	});
-};
 
 module.exports = Messages;
