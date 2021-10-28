@@ -35,6 +35,21 @@ messageRouter.post('/messages', bearerAuth, permission, async (req, res, next) =
   }
 });
 
+
+messageRouter.put('/messages/:id', bearerAuth, permission, async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const newMessage = req.body.body;
+    const updatedMessage = await Messages.update({body: newMessage}, {
+      where: {id: id}
+    });
+    res.send(deletedMessage);
+    
+  } catch(e){
+    res.send(e);
+  }
+});
+
 messageRouter.delete('/messages/:id', bearerAuth, permission, async (req, res, next) => {
   try {
     const id = req.params.id;
