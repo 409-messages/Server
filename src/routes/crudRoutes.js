@@ -42,7 +42,7 @@ messageRouter.put('/messages/:id', bearerAuth, permission, async (req, res, next
     const updatedMessage = await Messages.update({body: newMessage}, {
       where: {id: id}
     });
-    res.send(deletedMessage);
+    res.send(updatedMessage);
     
   } catch(e){
     res.send(e);

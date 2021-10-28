@@ -9,16 +9,16 @@ const Users = (sequelize, DataTypes) => {
   const usersTable = sequelize.define('Users', {
     username: {
       type: DataTypes.STRING,
-      allowNull: false,
+      required: true,
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      required: true,
     },
     role: {
       type: DataTypes.ENUM( 'guest', 'user', 'admin', ),
       defaultValue: 'guest',
-      allowNull: false,
+      required: true,
     },
     token: {
       type:DataTypes.VIRTUAL,
@@ -50,15 +50,13 @@ const Users = (sequelize, DataTypes) => {
     user.password = encryptPassword;
   });
 
-  usersTable.authBasic = async function (username, password) {
+  usersTable.authenticateBasic = async function (username, password) {
     let parsedUser = await this.findOne({ where: { username}});
     let isValidPassword = await bcrypt.compare(password, parsedUser.password);
     if(isValidPassword) {
       return parsedUser;
-    } else {
-      throw new Error('Not Authenticated');
-    }
-  }
+    } throw new Error('Not Authenticated');
+  };
   usersTable.authenticateToken = async function (token) {
     try{
       const parsedToken = jwt.verify(token, SECRET);

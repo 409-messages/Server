@@ -1,7 +1,7 @@
 'use strict';
 
-const Messages = (sequelize, DataTypes) => {
-	const messagesLog = sequelize.define('messages', {
+const Messages = (sequelize, DataTypes) => 
+	sequelize.define('messages', {
 		sender: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -15,6 +15,5 @@ const Messages = (sequelize, DataTypes) => {
 			allowNull: false,
 		},
 	});
-};
 
 module.exports = Messages;

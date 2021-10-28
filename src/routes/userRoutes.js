@@ -2,7 +2,7 @@
 
 const express = require('express');
 const authRouter = express.Router();
-const Users = require('../Models/users');
+const { users } = require('../Models');
 const bearerAuth = require('../middleware/bearerAuth');
 const basicAuth = require('../middleware/basicAuth');
 
@@ -11,7 +11,7 @@ const basicAuth = require('../middleware/basicAuth');
 
 authRouter.post('/signup', async (req, res, next) => {
   try {
-    let newUser = await Users.create(req.body);
+    let newUser = await users.create(req.body);
     const output = {
       user: newUser,
       token: newUser.token,
@@ -32,8 +32,8 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 
 
 authRouter.get('/users', bearerAuth, async (req, res, next) => {
-  const userQuery = await Users.findAll({});
-  const list = userQuery.map()
+  const userQuery = await users.findAll({});
+  const list = userQuery.map( user => user.username)
   res.status(200).send(list);
 })
 
