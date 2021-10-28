@@ -16,8 +16,8 @@ const Users = (sequelize, DataTypes) => {
       allowNull: false,
     },
     role: {
-      type: DataTypes.ENUM('user', 'admin'),
-      defaultValue: 'user',
+      type: DataTypes.ENUM( 'guest', 'user', 'admin', ),
+      defaultValue: 'guest',
       allowNull: false,
     },
     token: {
