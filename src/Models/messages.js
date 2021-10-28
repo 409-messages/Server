@@ -8,7 +8,7 @@ const Messages = (sequelize, DataTypes) => {
       allowNull: false,
     },
     reciever: {
-      type: DataTypesTypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
     body: {
