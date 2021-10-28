@@ -32,3 +32,5 @@ authRouter.get('/users', bearerAuth, async (req, res, next) => {
   const userQuery = await Users.findAll({});
   const list = userRecords.map()
 })
+
+module.exports = authRouter;
