@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET || 'secretstringfortesting';
 const bcrypt = require('bcrypt');
 
-
 const Users = (sequelize, DataTypes) => {
   const usersTable = sequelize.define('Users', {
     username: {
@@ -43,13 +42,38 @@ const Users = (sequelize, DataTypes) => {
       }
     },
 
-  });
+	usersTable.beforeCreate(async (user) => {
+		let encryptPassword = await bcrypt.hash(user.password, 10);
+		user.password = encryptPassword;
+	});
 
-  usersTable.beforeCreate(async (user) => {
-    let encryptPassword = await bcrypt.hash(user.password, 10);
-    user.password = encryptPassword;
-  });
+	usersTable.authenticateBasic = async function (username, password) {
+		let parsedUser = await this.findOne({ where: { username } });
+		let isValidPassword = await bcrypt.compare(password, parsedUser.password);
+		if (isValidPassword) {
+			return parsedUser;
+		}
+		throw new Error('Not Authenticated');
+	};
 
+<<<<<<< HEAD
+	usersTable.authenticateToken = async function (token) {
+		try {
+			const parsedToken = jwt.verify(token, SECRET);
+			const user = await this.findOne({
+				where: { username: parsedToken.username },
+			});
+			if (user) {
+				return user;
+			}
+			throw new Error('User Not Found');
+		} catch (e) {
+			throw new Error(e.message);
+		}
+	};
+	return usersTable;
+};
+=======
   usersTable.authenticateBasic = async function (username, password) {
     let parsedUser = await this.findOne({ where: { username}});
     let isValidPassword = await bcrypt.compare(password, parsedUser.password);
@@ -71,5 +95,6 @@ const Users = (sequelize, DataTypes) => {
   };
   return usersTable;
 }
+>>>>>>> main
 
 module.exports = Users;

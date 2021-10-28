@@ -1,7 +1,7 @@
 'use strict';
 
-const Messages = (sequelize, DataTypes) => 
-	sequelize.define('messages', {
+const Messages = (sequelize, DataTypes) =>
+	sequelize.define('Messages', {
 		sender: {
 			type: DataTypes.STRING,
 			allowNull: false,
@@ -12,7 +12,7 @@ const Messages = (sequelize, DataTypes) =>
 		},
 		body: {
 			type: DataTypes.TEXT,
-			allowNull: false,
+			allowNull: true,
 		},
 	});
 
