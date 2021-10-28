@@ -4,20 +4,21 @@ const base64 = require('base-64');
 const { users } = require('../Models');
 
 module.exports = async (req, res, next) => {
-  if (!req.headers.authorization) {
-    return authError();
-  }
-  let basic = req.headers.authorization.split(' ').pop();
-  let decoded = base64.decode(basic);
-  let [username, password] = decoded.split(':');
-  try {
-    req.user = await users.authenticateBasic(username, password);
-    next();
-  } catch (e) {
-    authError();
-  }
+	if (!req.headers.authorization) {
+		console.log('in here');
+		return authError();
+	}
+	let basic = req.headers.authorization.split(' ').pop();
+	let decoded = base64.decode(basic);
+	let [username, password] = decoded.split(':');
+	try {
+		req.user = await users.authenticateBasic(username, password);
+		next();
+	} catch (e) {
+		authError();
+	}
 
-  function authError() {
-    res.status(403).send('Invalid Login');
-  }
+	function authError() {
+		res.status(403).send('Invalid Login');
+	}
 };
