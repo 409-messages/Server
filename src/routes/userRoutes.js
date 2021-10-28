@@ -3,8 +3,10 @@
 const express = require('express');
 const authRouter = express.Router();
 const Users = require('../Models/users');
+
 const basicAuth = require('../middleware/basicAuth');
-const bearerAuth = require('../middleware/bearerAuth');
+
+
 
 
 authRouter.post('/signup', async (req, res, next) => {
@@ -28,9 +30,5 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
   res.status(200).json(user);
 });
 
-authRouter.get('/users', bearerAuth, async (req, res, next) => {
-  const userQuery = await Users.findAll({});
-  const list = userRecords.map()
-})
 
 module.exports = authRouter;
