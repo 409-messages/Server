@@ -29,8 +29,26 @@ const Users = (sequelize, DataTypes) => {
         }
         return acl[this.role];
       }
-    }
+    },
 
-  })
-  
+  });
+
+  usersTable.beforeCreate(async (user) => {
+    let encryptPass = await bcrypt.hash(user.password, 10);
+    user.password = encryptPass;
+  });
+
+  usersTable.authBasic = async function(username, password) {
+    let user = await this.findOne({ where: { username}});
+
+    let isValidPassword = await bcrypt.compare(password, user.password);
+    if(isValidPassword) {
+      return user;
+    } else {
+      throw new Error('Not Authenticated');
+    }
+  }
+  return usersTable;
 }
+
+module.exports = Users;

@@ -11,6 +11,10 @@ const Messages = (sequelize, DataTypes) => {
       type: DataTypesTypes.STRING,
       allowNull: false
     },
+    body: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
   })
 }
 
