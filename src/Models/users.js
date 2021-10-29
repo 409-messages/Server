@@ -41,7 +41,17 @@ const Users = (sequelize, DataTypes) => {
         return acl[this.role];
       }
     },
+  });
 
+  usersTable.associate = models => {
+      usersTable.hasMany(models.Post, {
+        onDelete:"cascade"
+      });
+
+      usersTable.hasMany(models.Profile, {
+        onDelete:"cascade"
+      });
+  };
 	usersTable.beforeCreate(async (user) => {
 		let encryptPassword = await bcrypt.hash(user.password, 10);
 		user.password = encryptPassword;
@@ -56,7 +66,6 @@ const Users = (sequelize, DataTypes) => {
 		throw new Error('Not Authenticated');
 	};
 
-<<<<<<< HEAD
 	usersTable.authenticateToken = async function (token) {
 		try {
 			const parsedToken = jwt.verify(token, SECRET);
@@ -73,28 +82,6 @@ const Users = (sequelize, DataTypes) => {
 	};
 	return usersTable;
 };
-=======
-  usersTable.authenticateBasic = async function (username, password) {
-    let parsedUser = await this.findOne({ where: { username}});
-    let isValidPassword = await bcrypt.compare(password, parsedUser.password);
-    if(isValidPassword) {
-      return parsedUser;
-    } throw new Error('Not Authenticated');
-  };
-  usersTable.authenticateToken = async function (token) {
-    try{
-      const parsedToken = jwt.verify(token, SECRET);
-      const user = await this.findOne({where: {username: parsedToken.username}});
-      if(user){
-        return user;
-      }
-      throw new Error('User Not Found');
-    } catch (e) {
-      throw new Error(e.message);
-    }
-  };
-  return usersTable;
-}
->>>>>>> main
+
 
 module.exports = Users;
