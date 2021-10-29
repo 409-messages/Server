@@ -28,9 +28,11 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 });
 
 authRouter.get('/users', bearerAuth, async (req, res, next) => {
-	const userQuery = await users.findAll({});
-	const list = userQuery.map((user) => user.username);
-	res.status(200).send(list);
+	const userQuery = await users.findAll({
+		include: [db.Profile, db.Post],
+	});
+	// const list = userQuery.map((user) => user.username);
+	res.status(200).send(userQuery);
 });
 
 authRouter.get('/secret', bearerAuth, async (req, res, next) => {
