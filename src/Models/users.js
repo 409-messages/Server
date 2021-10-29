@@ -46,16 +46,16 @@ module.exports = (sequelize, DataTypes) => {
 			},
 		},
 	});
-	Users.associate = (Models) => {
-		Users.hasMany(Models.Messages, {
-			onDelete: 'cascade',
-		});
-	};
-	Users.associate = (Models) => {
-		Users.hasOne(Models.Profile, {
-			onDelete: 'cascade',
-		});
-	};
+	// Users.associate = (Models) => {
+	// 	Users.hasMany(Models.Messages, {
+	// 		onDelete: 'cascade',
+	// 	});
+	// };
+	// Users.associate = (Models) => {
+	// 	Users.hasOne(Models.Profile, {
+	// 		onDelete: 'cascade',
+	// 	});
+	// };
 
 	// Before we create our table
 	Users.beforeCreate(async (user) => {

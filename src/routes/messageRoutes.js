@@ -7,8 +7,8 @@ const bearerAuth = require('../middleware/bearerAuth');
 const permission = require('../middleware/permissions');
 // Router
 const { messages } = require('../Models');
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
 // Route to GET all messages based on user Authorization
 messageRouter.get('/messages/all', bearerAuth, async (req, res, next) => {
