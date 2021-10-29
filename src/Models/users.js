@@ -5,43 +5,48 @@ const SECRET = process.env.SECRET || 'secretstringfortesting';
 const bcrypt = require('bcrypt');
 
 const Users = (sequelize, DataTypes) => {
-  const usersTable = sequelize.define('Users', {
-    username: {
-      type: DataTypes.STRING,
-      required: true,
-    },
-    password: {
-      type: DataTypes.STRING,
-      required: true,
-    },
-    role: {
-      type: DataTypes.ENUM( 'guest', 'user', 'admin', ),
-      defaultValue: 'guest',
-      required: true,
-    },
-    token: {
-      type:DataTypes.VIRTUAL,
-      get() {
-        return jwt.sign({
-          username: this.username
-        }, SECRET)},
-      set(tokenObj){
-        let token = jwt.sign(tokenObj, SECRET);
-        return token;
-      },
-    },
-    capabilities: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        const acl = {
-          guest: ['read'],
-          user: ['read', 'create', 'update'],
-          admin: ['read', 'create', 'update', 'delete'],
-        }
-        return acl[this.role];
-      }
-    },
-  });
+
+	const usersTable = sequelize.define('Users', {
+		username: {
+			type: DataTypes.STRING,
+			required: true,
+		},
+		password: {
+			type: DataTypes.STRING,
+			required: true,
+		},
+		role: {
+			type: DataTypes.ENUM('guest', 'user', 'admin'),
+			defaultValue: 'guest',
+			required: true,
+		},
+		token: {
+			type: DataTypes.VIRTUAL,
+			get() {
+				return jwt.sign(
+					{
+						username: this.username,
+					},
+					SECRET
+				);
+			},
+			set(tokenObj) {
+				let token = jwt.sign(tokenObj, SECRET);
+				return token;
+			},
+		},
+		capabilities: {
+			type: DataTypes.VIRTUAL,
+			get() {
+				const acl = {
+					guest: ['read'],
+					user: ['read', 'create', 'update'],
+					admin: ['read', 'create', 'update', 'delete'],
+				};
+				return acl[this.role];
+			},
+		},
+	});
 
   usersTable.associate = models => {
       usersTable.hasMany(models.Post, {
@@ -82,6 +87,5 @@ const Users = (sequelize, DataTypes) => {
 	};
 	return usersTable;
 };
-
 
 module.exports = Users;
