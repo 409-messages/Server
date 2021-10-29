@@ -5,7 +5,6 @@ const SECRET = process.env.SECRET || 'secretstringfortesting';
 const bcrypt = require('bcrypt');
 
 const Users = (sequelize, DataTypes) => {
-
 	const usersTable = sequelize.define('Users', {
 		username: {
 			type: DataTypes.STRING,
@@ -48,20 +47,23 @@ const Users = (sequelize, DataTypes) => {
 		},
 	});
 
-  usersTable.associate = models => {
-      usersTable.hasMany(models.Post, {
-        onDelete:"cascade"
-      });
+	usersTable.associate = (models) => {
+		usersTable.hasMany(models.Messages, {
+			onDelete: 'cascade',
+		});
 
-      usersTable.hasMany(models.Profile, {
-        onDelete:"cascade"
-      });
-  };
+		usersTable.hasMany(models.Profile, {
+			onDelete: 'cascade',
+		});
+	};
+
+	// Before we create our table
 	usersTable.beforeCreate(async (user) => {
 		let encryptPassword = await bcrypt.hash(user.password, 10);
 		user.password = encryptPassword;
 	});
 
+	// Authenticate our User using Basic Mw.
 	usersTable.authenticateBasic = async function (username, password) {
 		let parsedUser = await this.findOne({ where: { username } });
 		let isValidPassword = await bcrypt.compare(password, parsedUser.password);
@@ -71,6 +73,7 @@ const Users = (sequelize, DataTypes) => {
 		throw new Error('Not Authenticated');
 	};
 
+	// Authorize our User using Token
 	usersTable.authenticateToken = async function (token) {
 		try {
 			const parsedToken = jwt.verify(token, SECRET);
@@ -78,6 +81,7 @@ const Users = (sequelize, DataTypes) => {
 				where: { username: parsedToken.username },
 			});
 			if (user) {
+				console.log(user);
 				return user;
 			}
 			throw new Error('User Not Found');

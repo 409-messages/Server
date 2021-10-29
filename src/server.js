@@ -3,7 +3,6 @@
 const express = require('express');
 const cors = require('cors');
 
-
 //Bring in Mw
 const logger = require('./middleware/logger');
 
@@ -14,6 +13,7 @@ const err500 = require('./error-handler/500');
 // Bring in Route Handlers
 const crudRoutes = require('./routes/crudRoutes');
 const userRoutes = require('./routes/userRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 // Use Express
 const app = express();
@@ -35,8 +35,8 @@ app.use(err404);
 app.use(err500);
 
 module.exports = {
-  app,
-  start: (port) => {
-    app.listen(port, () => console.log(`server spinning on ${port}`));
-  },
+	app,
+	start: (port) => {
+		app.listen(port, () => console.log(`server spinning on ${port}`));
+	},
 };
