@@ -1,12 +1,15 @@
 'use strict';
-
+// Express
 const express = require('express');
 const authRouter = express.Router();
-const { users } = require('../Models');
+// Mw
 const bearerAuth = require('../middleware/bearerAuth');
 const basicAuth = require('../middleware/basicAuth');
 const permission = require('../middleware/permissions');
+//Routes
+const { users } = require('../Models');
 
+// Rount to handle User-sign-up
 authRouter.post('/signup', async (req, res, next) => {
 	try {
 		let newUser = await users.create(req.body);
@@ -20,6 +23,7 @@ authRouter.post('/signup', async (req, res, next) => {
 	}
 });
 
+// Route to Handle User-Sign-in
 authRouter.post('/signin', basicAuth, (req, res, next) => {
 	const user = {
 		user: req.user,
@@ -28,6 +32,7 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 	res.status(200).json(user);
 });
 
+// Route to retrieve All-users
 authRouter.get('/users', bearerAuth, async (req, res, next) => {
 	console.log(req);
 	try {
@@ -38,12 +43,7 @@ authRouter.get('/users', bearerAuth, async (req, res, next) => {
 	}
 });
 
-authRouter.get('/secret', bearerAuth, async (req, res, next) => {
-	res.status(200).send('You are now through the Looking Glass');
-});
-
-// ---------------------------------------------------- TO-DO -----------------------------------------------------------------------//
-//  ->>> authRouter.delete();
+// Route to handle user-Delete
 authRouter.delete(
 	'/users/delete/:id',
 	bearerAuth,

@@ -1,15 +1,16 @@
-// ---------------------------------------------------- TO-DO -----------------------------------------------------------------------//
-// Need to Create CRUD Routes for Profile
 'use strict';
-
+// Express
 const express = require('express');
 const profileRouter = express.Router();
+// Mw
 const bearerAuth = require('../middleware/bearerAuth');
-const { profiles } = require('../Models');
 const permission = require('../middleware/permissions');
-const app = express();
-app.use(express.json());
+// Routes
+const { profiles } = require('../Models');
+// const app = express();
+// app.use(express.json());
 
+// Routes to GET Profile based on User-Authorization
 profileRouter.get('/profiles/all', bearerAuth, async (req, res, next) => {
 	try {
 		// let userId = req.params.id
@@ -19,6 +20,7 @@ profileRouter.get('/profiles/all', bearerAuth, async (req, res, next) => {
 		res.send(e);
 	}
 });
+
 profileRouter.get(
 	'/profiles/all/:receiver',
 	bearerAuth,
@@ -33,16 +35,16 @@ profileRouter.get(
 	}
 );
 
+// Routes to CREATE Profile based on User-Authorization
 profileRouter.post('/profiles', bearerAuth, async (req, res, next) => {
 	let info = req.body;
 
 	try {
-		console.log('This is our console log', info);
 		let Profile = await profiles.create({
 			height: info.height,
 			age: info.age,
 			weight: info.weight,
-            interests: info.interests,
+			interests: info.interests,
 		});
 		res.json(Profile);
 	} catch (e) {
@@ -50,6 +52,7 @@ profileRouter.post('/profiles', bearerAuth, async (req, res, next) => {
 	}
 });
 
+// Routes to Update Profile based on User-Authorization
 profileRouter.put(
 	'/profiles/update/:id',
 	bearerAuth,
@@ -66,6 +69,7 @@ profileRouter.put(
 	}
 );
 
+// Routes to Delete Profile based on User-Authorization
 profileRouter.delete(
 	'/profiles/delete/:id',
 	bearerAuth,

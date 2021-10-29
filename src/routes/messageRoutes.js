@@ -1,16 +1,18 @@
 'use strict';
-
+// Express
 const express = require('express');
 const messageRouter = express.Router();
+// Mw
 const bearerAuth = require('../middleware/bearerAuth');
-const { messages } = require('../Models');
 const permission = require('../middleware/permissions');
+// Router
+const { messages } = require('../Models');
 const app = express();
 app.use(express.json());
 
+// Route to GET all messages based on user Authorization
 messageRouter.get('/messages/all', bearerAuth, async (req, res, next) => {
 	try {
-		// let userId = req.params.id
 		const findMessages = await messages.get();
 		res.send(findMessages);
 	} catch (e) {
@@ -31,6 +33,7 @@ messageRouter.get(
 	}
 );
 
+// Route to Create all messages based on user Authorization
 messageRouter.post('/messages', bearerAuth, async (req, res, next) => {
 	let info = req.body;
 
@@ -47,6 +50,7 @@ messageRouter.post('/messages', bearerAuth, async (req, res, next) => {
 	}
 });
 
+// Route to Update all messages based on user Authorization
 messageRouter.put(
 	'/messages/update/:id',
 	bearerAuth,
@@ -63,6 +67,7 @@ messageRouter.put(
 	}
 );
 
+// Route to Delete all messages based on user Authorization
 messageRouter.delete(
 	'/messages/delete/:id',
 	bearerAuth,
