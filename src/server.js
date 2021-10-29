@@ -29,7 +29,7 @@ app.use(logger);
 // Route-calls
 app.use(userRoutes);
 app.use('/api/secure', messagesRoutes);
-app.use('/api/secure', profileRoutes);
+// app.use('/api/secure', profileRoutes);
 
 // Error-calls
 app.use(err404);
