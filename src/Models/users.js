@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET || 'secretstringfortesting';
 const bcrypt = require('bcrypt');
 
-const Users = (sequelize, DataTypes) => {
-	const usersTable = sequelize.define('Users', {
+module.exports = (sequelize, DataTypes) => {
+	const Users = sequelize.define('Users', {
 		username: {
 			type: DataTypes.STRING,
 			required: true,
@@ -46,25 +46,25 @@ const Users = (sequelize, DataTypes) => {
 			},
 		},
 	});
-
-	usersTable.associate = (models) => {
-		usersTable.hasMany(models.Messages, {
+	Users.associate = (Models) => {
+		Users.hasMany(Models.Messages, {
 			onDelete: 'cascade',
 		});
-
-		usersTable.hasMany(models.Profile, {
+	};
+	Users.associate = (Models) => {
+		Users.hasOne(Models.Profile, {
 			onDelete: 'cascade',
 		});
 	};
 
 	// Before we create our table
-	usersTable.beforeCreate(async (user) => {
+	Users.beforeCreate(async (user) => {
 		let encryptPassword = await bcrypt.hash(user.password, 10);
 		user.password = encryptPassword;
 	});
 
 	// Authenticate our User using Basic Mw.
-	usersTable.authenticateBasic = async function (username, password) {
+	Users.authenticateBasic = async function (username, password) {
 		let parsedUser = await this.findOne({ where: { username } });
 		let isValidPassword = await bcrypt.compare(password, parsedUser.password);
 		if (isValidPassword) {
@@ -74,14 +74,13 @@ const Users = (sequelize, DataTypes) => {
 	};
 
 	// Authorize our User using Token
-	usersTable.authenticateToken = async function (token) {
+	Users.authenticateToken = async function (token) {
 		try {
 			const parsedToken = jwt.verify(token, SECRET);
 			const user = await this.findOne({
 				where: { username: parsedToken.username },
 			});
 			if (user) {
-				console.log(user);
 				return user;
 			}
 			throw new Error('User Not Found');
@@ -89,7 +88,5 @@ const Users = (sequelize, DataTypes) => {
 			throw new Error(e.message);
 		}
 	};
-	return usersTable;
+	return Users;
 };
-
-module.exports = Users;

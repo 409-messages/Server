@@ -5,6 +5,7 @@ const authRouter = express.Router();
 const { users } = require('../Models');
 const bearerAuth = require('../middleware/bearerAuth');
 const basicAuth = require('../middleware/basicAuth');
+const permission = require('../middleware/permissions');
 
 authRouter.post('/signup', async (req, res, next) => {
 	try {
@@ -28,15 +29,36 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 });
 
 authRouter.get('/users', bearerAuth, async (req, res, next) => {
-	const userQuery = await users.findAll({
-		include: [db.Profile, db.Post],
-	});
-	// const list = userQuery.map((user) => user.username);
-	res.status(200).send(userQuery);
+	console.log(req);
+	try {
+		const userQuery = await users.findAll({});
+		res.status(200).send(userQuery);
+	} catch (error) {
+		throw new Error(error);
+	}
 });
 
 authRouter.get('/secret', bearerAuth, async (req, res, next) => {
 	res.status(200).send('You are now through the Looking Glass');
 });
+
+// ---------------------------------------------------- TO-DO -----------------------------------------------------------------------//
+//  ->>> authRouter.delete();
+authRouter.delete(
+	'/users/delete/:id',
+	bearerAuth,
+	permission('delete'),
+	async (req, res, next) => {
+		try {
+			const id = req.params.id;
+			const userToDelete = await users.findOne({ Where: { id: id } });
+			const deleteUser = await users.delete(userToDelete);
+			const deleted = 'User Deleted';
+			res.send('User Deleted');
+		} catch (e) {
+			res.send(e);
+		}
+	}
+);
 
 module.exports = authRouter;
