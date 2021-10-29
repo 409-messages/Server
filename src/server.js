@@ -11,7 +11,7 @@ const err404 = require('./error-handler/404');
 const err500 = require('./error-handler/500');
 
 // Bring in Route Handlers
-const crudRoutes = require('./routes/crudRoutes');
+const messagesRoutes = require('./routes/messageRoutes');
 const userRoutes = require('./routes/userRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 
@@ -27,8 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger);
 
 // Route-calls
-app.use('/api/secure', crudRoutes);
 app.use(userRoutes);
+app.use('/api/secure', messagesRoutes);
+// app.use(messagesRoutes);
 
 // Error-calls
 app.use(err404);

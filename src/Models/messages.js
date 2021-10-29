@@ -6,22 +6,15 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		reciever: {
+		receiver: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
 		body: {
-			type: DataTypes.TEXT,
+			type: DataTypes.STRING,
 			allowNull: true,
 		},
 	});
 
-	Messages.associate = (models) => {
-		Messages.belongsTo(models.User, {
-			foreignKey: {
-				allowNull: false,
-			},
-		});
-	};
 	return Messages;
 };
