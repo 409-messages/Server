@@ -13,7 +13,7 @@ const err500 = require('./error-handler/500');
 // Bring in Route Handlers
 const messagesRoutes = require('./routes/messageRoutes');
 const userRoutes = require('./routes/userRoutes');
-const profileRoutes = require('./routes/profileRoutes');
+const profilesRoutes = require('./routes/profilesRoutes');
 
 // Use Express
 const app = express();

@@ -36,18 +36,18 @@ const sequelize = new Sequelize(DATABASE_URL);
 // SQL Database Instantiations:
 const users = userModel(sequelize, DataTypes);
 const messages = messagesModel(sequelize, DataTypes);
-const profile = profileModel(sequelize, DataTypes);
+const profiles = profileModel(sequelize, DataTypes);
 
 // ASSOCIATIONS
 messages.hasMany(users);
 users.belongsTo(messages);
 
-profile.hasOne(users);
-users.belongsTo(profile);
+profiles.hasOne(users);
+users.belongsTo(profiles);
 
 module.exports = {
 	db: sequelize,
 	users,
 	messages: new Collection(messages),
-	profile,
+	profiles: new Collection(profiles),
 };
