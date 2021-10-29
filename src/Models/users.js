@@ -5,6 +5,7 @@ const SECRET = process.env.SECRET || 'secretstringfortesting';
 const bcrypt = require('bcrypt');
 
 const Users = (sequelize, DataTypes) => {
+
 	const usersTable = sequelize.define('Users', {
 		username: {
 			type: DataTypes.STRING,
@@ -47,6 +48,15 @@ const Users = (sequelize, DataTypes) => {
 		},
 	});
 
+  usersTable.associate = models => {
+      usersTable.hasMany(models.Post, {
+        onDelete:"cascade"
+      });
+
+      usersTable.hasMany(models.Profile, {
+        onDelete:"cascade"
+      });
+  };
 	usersTable.beforeCreate(async (user) => {
 		let encryptPassword = await bcrypt.hash(user.password, 10);
 		user.password = encryptPassword;
