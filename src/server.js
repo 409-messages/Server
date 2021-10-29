@@ -13,7 +13,7 @@ const err500 = require('./error-handler/500');
 // Bring in Route Handlers
 const messagesRoutes = require('./routes/messageRoutes');
 const userRoutes = require('./routes/userRoutes');
-const profilesRoutes = require('./routes/profilesRoutes');
+const profileRoutes = require('./routes/profilesRoutes');
 
 // Use Express
 const app = express();
@@ -29,7 +29,7 @@ app.use(logger);
 // Route-calls
 app.use(userRoutes);
 app.use('/api/secure', messagesRoutes);
-// app.use(messagesRoutes);
+app.use('/api/secure', profileRoutes);
 
 // Error-calls
 app.use(err404);
